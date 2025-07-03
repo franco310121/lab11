@@ -15,6 +15,7 @@ public class UTPClubCliente_inicio extends javax.swing.JFrame {
      */
     public UTPClubCliente_inicio() {
         initComponents();
+        txt_id_local.setEnabled(false);
     }
 
     /**

@@ -81,9 +81,7 @@
                                                   <Component id="txt_fecha" alignment="0" min="-2" pref="137" max="-2" attributes="0"/>
                                                   <Component id="txt_id_socio" alignment="0" min="-2" pref="137" max="-2" attributes="0"/>
                                               </Group>
-                                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                                              <Component id="btn_validar_socio" min="-2" max="-2" attributes="0"/>
-                                              <EmptySpace min="0" pref="69" max="32767" attributes="0"/>
+                                              <EmptySpace min="0" pref="153" max="32767" attributes="0"/>
                                           </Group>
                                       </Group>
                                   </Group>
@@ -91,6 +89,8 @@
                               <Group type="103" alignment="1" groupAlignment="1" attributes="0">
                                   <Group type="102" alignment="1" attributes="0">
                                       <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                                      <Component id="btn_cancelar" min="-2" max="-2" attributes="0"/>
+                                      <EmptySpace type="separate" max="-2" attributes="0"/>
                                       <Component id="btn_procesar" min="-2" pref="106" max="-2" attributes="0"/>
                                   </Group>
                                   <Component id="jScrollPane2" alignment="0" pref="0" max="32767" attributes="0"/>
@@ -141,10 +141,7 @@
                           <EmptySpace min="-2" pref="24" max="-2" attributes="0"/>
                       </Group>
                       <Group type="102" alignment="1" attributes="0">
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="txt_id_socio" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="btn_validar_socio" alignment="3" min="-2" max="-2" attributes="0"/>
-                          </Group>
+                          <Component id="txt_id_socio" min="-2" max="-2" attributes="0"/>
                           <EmptySpace type="separate" max="-2" attributes="0"/>
                           <Component id="txt_fecha" min="-2" max="-2" attributes="0"/>
                           <EmptySpace min="-2" pref="102" max="-2" attributes="0"/>
@@ -156,6 +153,7 @@
                       <Component id="btn_procesar" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="jLabel6" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="txt_total_venta" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="btn_cancelar" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace pref="55" max="32767" attributes="0"/>
               </Group>
@@ -196,11 +194,6 @@
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="txt_id_socio">
-        </Component>
-        <Component class="javax.swing.JButton" name="btn_validar_socio">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="Validar"/>
-          </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel4">
           <Properties>
@@ -282,6 +275,14 @@
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btn_inicioActionPerformed"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JButton" name="btn_cancelar">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Cancelar"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btn_cancelarActionPerformed"/>
           </Events>
         </Component>
       </SubComponents>

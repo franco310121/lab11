@@ -15,6 +15,7 @@ public class UTPClubClient_socios extends javax.swing.JFrame {
      */
     public UTPClubClient_socios() {
         initComponents();
+        txt_id_local.setEnabled(false);
     }
 
     /**

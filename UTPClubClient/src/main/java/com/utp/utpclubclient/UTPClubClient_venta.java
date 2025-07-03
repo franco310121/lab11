@@ -4,10 +4,15 @@
  */
 package com.utp.utpclubclient;
 
+import com.utp.utpclubclient.rpc.RPCService;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Map;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import model.Producto;
+import persistencia.ConsumoDetalleDAO;
 import persistencia.ProductoDAO;
 
 /**
@@ -21,6 +26,7 @@ public class UTPClubClient_venta extends javax.swing.JFrame {
      */
     public UTPClubClient_venta() {
         initComponents();
+        txt_id_local.setEnabled(false);
         cargarProductosEnComboBox();
         DefaultTableModel modelo = new DefaultTableModel();
         modelo.addColumn("ID Producto");
@@ -30,6 +36,9 @@ public class UTPClubClient_venta extends javax.swing.JFrame {
         modelo.addColumn("Subtotal");
 
         tbl_detalle_venta.setModel(modelo);
+
+        txt_fecha.setText(LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+        txt_fecha.setEditable(false);
 
     }
 
@@ -61,7 +70,6 @@ public class UTPClubClient_venta extends javax.swing.JFrame {
         txt_id_local = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
         txt_id_socio = new javax.swing.JTextField();
-        btn_validar_socio = new javax.swing.JButton();
         jLabel4 = new javax.swing.JLabel();
         txt_fecha = new javax.swing.JTextField();
         jScrollPane2 = new javax.swing.JScrollPane();
@@ -73,6 +81,7 @@ public class UTPClubClient_venta extends javax.swing.JFrame {
         jLabel6 = new javax.swing.JLabel();
         txt_total_venta = new javax.swing.JTextField();
         btn_inicio = new javax.swing.JButton();
+        btn_cancelar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -91,8 +100,6 @@ public class UTPClubClient_venta extends javax.swing.JFrame {
         });
 
         jLabel3.setText("ID Socio:");
-
-        btn_validar_socio.setText("Validar");
 
         jLabel4.setText("Fecha:");
 
@@ -141,6 +148,13 @@ public class UTPClubClient_venta extends javax.swing.JFrame {
             }
         });
 
+        btn_cancelar.setText("Cancelar");
+        btn_cancelar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_cancelarActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -170,12 +184,12 @@ public class UTPClubClient_venta extends javax.swing.JFrame {
                                             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                                 .addComponent(txt_fecha, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)
                                                 .addComponent(txt_id_socio, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                            .addComponent(btn_validar_socio)
-                                            .addGap(0, 69, Short.MAX_VALUE)))))
+                                            .addGap(0, 153, Short.MAX_VALUE)))))
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                 .addGroup(jPanel1Layout.createSequentialGroup()
                                     .addGap(0, 0, Short.MAX_VALUE)
+                                    .addComponent(btn_cancelar)
+                                    .addGap(18, 18, 18)
                                     .addComponent(btn_procesar, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                                 .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
@@ -214,9 +228,7 @@ public class UTPClubClient_venta extends javax.swing.JFrame {
                         .addComponent(btnAgregar)
                         .addGap(24, 24, 24))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(txt_id_socio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btn_validar_socio))
+                        .addComponent(txt_id_socio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(txt_fecha, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(102, 102, 102)))
@@ -225,7 +237,8 @@ public class UTPClubClient_venta extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btn_procesar)
                     .addComponent(jLabel6)
-                    .addComponent(txt_total_venta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txt_total_venta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btn_cancelar))
                 .addContainerGap(55, Short.MAX_VALUE))
         );
 
@@ -314,8 +327,57 @@ public class UTPClubClient_venta extends javax.swing.JFrame {
 
 
     private void btn_procesarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_procesarActionPerformed
-        // TODO add your handling code here:
+        String idSocio = txt_id_socio.getText().trim();
+        String fecha = txt_fecha.getText().trim();
+        String idLocal = txt_id_local.getText().trim();
+        String totalTexto = txt_total_venta.getText().trim();
+
+        if (idSocio.isEmpty() || fecha.isEmpty() || idLocal.isEmpty() || totalTexto.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Todos los campos deben estar llenos.");
+            return;
+        }
+
+        if (!validar_socio()) {
+            return;
+        }
+
+        try {
+            double montoTotal = Double.parseDouble(totalTexto.replace(",", "."));
+
+            // Guardar detalles en SQLite local
+            DefaultTableModel model = (DefaultTableModel) tbl_detalle_venta.getModel();
+            ConsumoDetalleDAO dao = new ConsumoDetalleDAO();
+            dao.insertarDetalles(model, idSocio, fecha);
+
+            // RPC: Registrar cabecera en servidor
+            RPCService rpc = new RPCService("http://161.132.45.205:8050/RPC2");
+            boolean exito = rpc.registrarCabeceraConsumo(idLocal, idSocio, fecha, montoTotal);
+
+            if (exito) {
+                JOptionPane.showMessageDialog(this, "Venta registrada correctamente.");
+                limpiarCampos();
+            } else {
+                JOptionPane.showMessageDialog(this, "No se pudo registrar la cabecera en el servidor.");
+            }
+
+        } catch (NumberFormatException nfe) {
+            JOptionPane.showMessageDialog(this, "Total inválido: " + totalTexto);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error al registrar consumo: " + e.getMessage());
+            e.printStackTrace();
+        }
     }//GEN-LAST:event_btn_procesarActionPerformed
+
+    private void limpiarCampos() {
+        txt_id_socio.setText("");
+        txt_fecha.setText("");
+        txt_total_venta.setText("");
+        cbx_productos.setSelectedIndex(0); // Selecciona el primer producto (puedes ajustar)
+
+        // Limpiar la tabla
+        DefaultTableModel modelo = (DefaultTableModel) tbl_detalle_venta.getModel();
+        modelo.setRowCount(0);
+    }
 
     private void btn_inicioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_inicioActionPerformed
         UTPClubCliente_inicio inicio = new UTPClubCliente_inicio();
@@ -324,6 +386,43 @@ public class UTPClubClient_venta extends javax.swing.JFrame {
         this.dispose();
     }//GEN-LAST:event_btn_inicioActionPerformed
 
+    private void btn_cancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_cancelarActionPerformed
+        limpiarCampos();
+    }//GEN-LAST:event_btn_cancelarActionPerformed
+
+    private boolean validar_socio() {
+        String idSocio = txt_id_socio.getText().trim();
+        if (idSocio.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Ingrese el ID del socio.");
+            return false;
+        }
+
+        try {
+            RPCService rpc = new RPCService("http://161.132.45.205:8050/RPC2");
+            List<Map<String, Object>> socios = rpc.obtenerSocios();
+
+            boolean encontrado = false;
+            for (Map<String, Object> socio : socios) {
+                if (socio.get("id_socio").toString().equalsIgnoreCase(idSocio)) {
+                    encontrado = true;
+                    break;
+                }
+            }
+
+            if (encontrado) {
+                JOptionPane.showMessageDialog(this, "Socio validado correctamente. Puede continuar.");
+                return true;
+
+            } else {
+                JOptionPane.showMessageDialog(this, "El socio no está registrado en la base de datos central.");
+                return false;
+            }
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error al validar socio: " + e.getMessage());
+            return false;
+        }
+    }
     /**
      * @param args the command line arguments
      */
@@ -361,9 +460,9 @@ public class UTPClubClient_venta extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAgregar;
+    private javax.swing.JButton btn_cancelar;
     private javax.swing.JButton btn_inicio;
     private javax.swing.JButton btn_procesar;
-    private javax.swing.JButton btn_validar_socio;
     private javax.swing.JComboBox<String> cbx_productos;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;

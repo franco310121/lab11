@@ -4,7 +4,10 @@
  */
 package com.utp.utpclubclient;
 
+import com.utp.utpclubclient.rpc.RPCService;
 import java.util.List;
+import java.util.Map;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import model.ConsumoDetalle;
 import persistencia.ConsumoDetalleDAO;
@@ -22,6 +25,7 @@ public class UTPClubClient_registros extends javax.swing.JFrame {
         initComponents();
         mostrarDetallesEnTabla();
         txt_id_local.setEnabled(false);
+        mostrarCabecerasDesdeServidor(txt_id_local.getText());
     }
 
     /**
@@ -236,6 +240,34 @@ public class UTPClubClient_registros extends javax.swing.JFrame {
 
         tbl_lista_detalle.setModel(modelo);
     }
+    
+    private void mostrarCabecerasDesdeServidor(String idLocal) {
+    try {
+        RPCService rpc = new RPCService("http://161.132.45.205:8050/RPC2");
+        List<Map<String, Object>> cabeceras = rpc.obtenerCabecerasPorLocal(idLocal);
+
+        String[] columnas = {"ID Cabecera", "ID Local", "ID Socio", "Fecha Consumo", "Monto Total"};
+        DefaultTableModel modelo = new DefaultTableModel(columnas, 0);
+
+        for (Map<String, Object> cabecera : cabeceras) {
+            Object[] fila = {  
+                cabecera.get("id_cabecera"),
+                cabecera.get("id_local"),
+                cabecera.get("id_socio"),
+                cabecera.get("fecha_consumo"),
+                cabecera.get("monto_total")
+            };
+            modelo.addRow(fila);
+        }
+
+        tbl_lista_registro.setModel(modelo);
+
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(this, "Error al obtener cabeceras de consumo: " + e.getMessage());
+        System.out.println(e);
+    }
+}
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btn_inicio;

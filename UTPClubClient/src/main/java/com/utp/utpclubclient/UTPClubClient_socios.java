@@ -4,6 +4,12 @@
  */
 package com.utp.utpclubclient;
 
+import com.utp.utpclubclient.rpc.RPCService;
+import java.util.List;
+import java.util.Map;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author Usuario
@@ -16,6 +22,7 @@ public class UTPClubClient_socios extends javax.swing.JFrame {
     public UTPClubClient_socios() {
         initComponents();
         txt_id_local.setEnabled(false);
+        mostrarSociosDesdeServidor();
     }
 
     /**
@@ -113,7 +120,7 @@ public class UTPClubClient_socios extends javax.swing.JFrame {
     private void btn_inicioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_inicioActionPerformed
         UTPClubCliente_inicio inicio = new UTPClubCliente_inicio();
         inicio.setVisible(true);
-        
+
         this.dispose();
     }//GEN-LAST:event_btn_inicioActionPerformed
 
@@ -155,6 +162,35 @@ public class UTPClubClient_socios extends javax.swing.JFrame {
             }
         });
     }
+
+    private void mostrarSociosDesdeServidor() {
+        try {
+            // Instanciar el servicio RPC con la URL correcta
+            RPCService rpc = new RPCService("http://161.132.45.205:8050/RPC2");
+            List<Map<String, Object>> socios = rpc.obtenerSocios();
+
+            // Definir columnas
+            String[] columnas = {"ID Socio", "Nombre", "Tipo Membresía"};
+            DefaultTableModel modelo = new DefaultTableModel(columnas, 0);
+
+            // Rellenar la tabla con los datos obtenidos del servidor
+            for (Map<String, Object> socio : socios) {
+                Object[] fila = {
+                    socio.get("id_socio"),
+                    socio.get("nombre_socio"),
+                    socio.get("tipo_membresia")
+                };
+                modelo.addRow(fila);
+            }
+
+            // Asignar el modelo a la tabla
+            tbl_lista_socios.setModel(modelo);
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error al obtener socios: " + e.getMessage());
+        }
+    }
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btn_inicio;

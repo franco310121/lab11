@@ -43,6 +43,16 @@ public class RPCService {
     }
 
     public List<Map<String, Object>> obtenerCabecerasPorLocal(String idLocal) throws Exception {
-        return (List<Map<String, Object>>) client.execute("obtenerCabecerasConsumoPorLocal", new Object[]{idLocal});
+    Object[] raw = (Object[]) client.execute("obtenerCabecerasConsumoPorLocal", new Object[]{idLocal});
+    List<Map<String, Object>> lista = new ArrayList<>();
+
+    for (Object o : raw) {
+        if (o instanceof Map) {
+            lista.add((Map<String, Object>) o);
+        }
     }
+
+    return lista;
+}
+
 }

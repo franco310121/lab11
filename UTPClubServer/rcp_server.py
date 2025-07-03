@@ -1,9 +1,10 @@
 from xmlrpc.server import SimpleXMLRPCServer
 import mysql.connector
-from datetime import datetime
+from datetime import datetime, date
+from decimal import Decimal
 
 conexion = mysql.connector.connect(
-    host="161.132.45.205",
+    host="localhost",
     user="admin",
     password="990324",
     database="UTPBDCentral"
@@ -39,13 +40,21 @@ def obtener_socios():
 def obtener_cabeceras_consumo_por_local(id_local):
     try:
         cursor.execute("SELECT * FROM CabecerasConsumo WHERE id_local = %s", (id_local,))
-        return cursor.fetchall()
+        resultados = cursor.fetchall()
+
+        for fila in resultados:
+            for key in fila:
+                valor = fila[key]
+                if isinstance(valor, (datetime, date)):
+                    fila[key] = valor.strftime("%Y-%m-%d")
+                elif isinstance(valor, Decimal):
+                    fila[key] = float(valor)
+        return resultados
     except mysql.connector.Error as e:
         return f"Error al obtener cabeceras: {e}"
 
-
-server = SimpleXMLRPCServer(("0.0.0.0", 8000), allow_none=True)
-print("Servidor RPC escuchando en el puerto 8000...")
+server = SimpleXMLRPCServer(("0.0.0.0", 8050), allow_none=True)
+print("Servidor RPC escuchando en el puerto 8050...")
 
 server.register_function(registrar_socio, "registrarSocio")
 server.register_function(registrar_cabecera_consumo, "registrarCabeceraConsumo")

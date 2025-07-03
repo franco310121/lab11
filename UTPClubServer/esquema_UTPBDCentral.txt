@@ -1,0 +1,14 @@
+CREATE TABLE Socios (
+    id_socio VARCHAR(20) PRIMARY KEY,
+    nombre_socio VARCHAR(100),
+    tipo_membresia VARCHAR(50)
+);
+
+CREATE TABLE CabecerasConsumo (
+    id_consumo INTEGER PRIMARY KEY AUTO_INCREMENT,
+    id_local VARCHAR(10),
+    id_socio VARCHAR(20),
+    fecha_consumo DATE,
+    monto_total DECIMAL(10, 2),
+    FOREIGN KEY (id_socio) REFERENCES Socios(id_socio)
+);

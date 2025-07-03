@@ -1,0 +1,18 @@
+-- Tabla para registrar detalles de consumo
+CREATE TABLE ConsumosDetalle (
+    id_detalle INTEGER PRIMARY KEY AUTOINCREMENT,
+    id_socio TEXT NOT NULL,
+    fecha_consumo TEXT NOT NULL,
+    id_producto_servicio TEXT NOT NULL,
+    descripcion TEXT NOT NULL,
+    cantidad INTEGER NOT NULL,
+    precio_unitario REAL NOT NULL,
+    subtotal REAL NOT NULL
+);
+
+-- Tabla de productos y servicios disponibles en el local
+CREATE TABLE ProductosServicios (
+    id_producto_servicio TEXT PRIMARY KEY,
+    descripcion TEXT NOT NULL,
+    precio REAL NOT NULL
+);

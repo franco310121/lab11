@@ -24,8 +24,12 @@ public class UTPClubClient_venta extends javax.swing.JFrame {
     /**
      * Creates new form UTPClubClient_venta
      */
-    public UTPClubClient_venta() {
+    public String idLocal;
+    
+    public UTPClubClient_venta(String idLocal) {
         initComponents();
+        this.idLocal = idLocal;
+        txt_id_local.setText(idLocal);
         txt_id_local.setEnabled(false);
         cargarProductosEnComboBox();
         DefaultTableModel modelo = new DefaultTableModel();
@@ -34,11 +38,13 @@ public class UTPClubClient_venta extends javax.swing.JFrame {
         modelo.addColumn("Cantidad");
         modelo.addColumn("Precio Unitario");
         modelo.addColumn("Subtotal");
+        setLocationRelativeTo(null);
 
         tbl_detalle_venta.setModel(modelo);
 
         txt_fecha.setText(LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
         txt_fecha.setEditable(false);
+        setTitle("UTP CLUB CLIENTE - LOCAL " + idLocal);
 
     }
 
@@ -370,17 +376,17 @@ public class UTPClubClient_venta extends javax.swing.JFrame {
 
     private void limpiarCampos() {
         txt_id_socio.setText("");
-        txt_fecha.setText("");
         txt_total_venta.setText("");
         cbx_productos.setSelectedIndex(0); // Selecciona el primer producto (puedes ajustar)
 
         // Limpiar la tabla
         DefaultTableModel modelo = (DefaultTableModel) tbl_detalle_venta.getModel();
         modelo.setRowCount(0);
+        
     }
 
     private void btn_inicioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_inicioActionPerformed
-        UTPClubCliente_inicio inicio = new UTPClubCliente_inicio();
+        UTPClubCliente_inicio inicio = new UTPClubCliente_inicio(idLocal);
         inicio.setVisible(true);
 
         this.dispose();
@@ -453,7 +459,7 @@ public class UTPClubClient_venta extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new UTPClubClient_venta().setVisible(true);
+                new UTPClubClient_venta("").setVisible(true);
             }
         });
     }

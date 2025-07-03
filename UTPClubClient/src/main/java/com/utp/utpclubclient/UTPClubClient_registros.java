@@ -21,11 +21,17 @@ public class UTPClubClient_registros extends javax.swing.JFrame {
     /**
      * Creates new form UTPClubClient_registros
      */
-    public UTPClubClient_registros() {
+    public String idLocal;
+    
+    public UTPClubClient_registros(String idLocal) {
         initComponents();
+        this.idLocal = idLocal;
+        txt_id_local.setText(idLocal);
         mostrarDetallesEnTabla();
         txt_id_local.setEnabled(false);
         mostrarCabecerasDesdeServidor(txt_id_local.getText());
+        setTitle("UTP CLUB CLIENTE - LOCAL " + idLocal);
+        setLocationRelativeTo(null);
     }
 
     /**
@@ -177,7 +183,7 @@ public class UTPClubClient_registros extends javax.swing.JFrame {
     }//GEN-LAST:event_txt_id_localActionPerformed
 
     private void btn_inicioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_inicioActionPerformed
-        UTPClubCliente_inicio inicio = new UTPClubCliente_inicio();
+        UTPClubCliente_inicio inicio = new UTPClubCliente_inicio(idLocal);
         inicio.setVisible(true);
 
         this.setVisible(false);
@@ -213,7 +219,7 @@ public class UTPClubClient_registros extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new UTPClubClient_registros().setVisible(true);
+                new UTPClubClient_registros("").setVisible(true);
             }
         });
     }

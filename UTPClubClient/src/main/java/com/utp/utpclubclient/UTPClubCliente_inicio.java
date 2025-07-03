@@ -13,9 +13,16 @@ public class UTPClubCliente_inicio extends javax.swing.JFrame {
     /**
      * Creates new form UTPClubCliente_inicio
      */
-    public UTPClubCliente_inicio() {
+    
+    public String idLocal;
+    
+    public UTPClubCliente_inicio(String idLocal) {
+        this.idLocal = idLocal;
         initComponents();
+        txt_id_local.setText(idLocal);
         txt_id_local.setEnabled(false);
+        setLocationRelativeTo(null);
+        setTitle("UTP CLUB CLIENTE - LOCAL " + idLocal);
     }
 
     /**
@@ -133,7 +140,7 @@ public class UTPClubCliente_inicio extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btn_ventasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_ventasActionPerformed
-        UTPClubClient_venta venta = new UTPClubClient_venta();
+        UTPClubClient_venta venta = new UTPClubClient_venta(idLocal);
         venta.setVisible(true);
         
         this.dispose();
@@ -144,14 +151,14 @@ public class UTPClubCliente_inicio extends javax.swing.JFrame {
     }//GEN-LAST:event_txt_id_localActionPerformed
 
     private void btn_sociosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_sociosActionPerformed
-        UTPClubClient_socios socios = new UTPClubClient_socios();
+        UTPClubClient_socios socios = new UTPClubClient_socios(idLocal);
         socios.setVisible(true);
         
         this.dispose();
     }//GEN-LAST:event_btn_sociosActionPerformed
 
     private void btn_registroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_registroActionPerformed
-        UTPClubClient_registros registros = new UTPClubClient_registros();
+        UTPClubClient_registros registros = new UTPClubClient_registros(idLocal);
         registros.setVisible(true);
         
         this.dispose();
@@ -187,7 +194,7 @@ public class UTPClubCliente_inicio extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new UTPClubCliente_inicio().setVisible(true);
+                new UTPClubCliente_inicio("").setVisible(true);
             }
         });
     }
